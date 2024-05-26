@@ -74,6 +74,13 @@ def main():
         lon = map_data['last_clicked']['lng']
 
     st.write(f"Selected Coordinates: Latitude {lat}, Longitude {lon}")
+    # Display Location Name
+    if lat and lon:
+        location_name = get_location_name(lat, lon)
+        if location_name:
+            st.write(f"Current Location: {location_name}")
+        else:
+            st.write("Location Name Not Available")
 
     # Fetch weather data
     if st.button("Get Weather Data"):
@@ -155,13 +162,6 @@ def main():
         st.write("Daily Mean Data:")
         st.dataframe(daily_mean[['max_temp', 'max_weather_code', 'max_relative_humidity', 'max_wind_speed']])
 
-        # Display Location Name
-        if lat and lon:
-            location_name = get_location_name(lat, lon)
-            if location_name:
-                st.write(f"Current Location: {location_name}")
-            else:
-                st.write("Location Name Not Available")
 
         # Print Tomorrow's Temperature
         tomorrow_date = datetime.utcnow().date() + timedelta(days=1)
