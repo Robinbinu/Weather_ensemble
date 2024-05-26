@@ -132,9 +132,20 @@ def main():
 
         # Create columns for max_temp, max_weather_code, max_relative_humidity, max_wind_speed
         df['max_temp'] = df[[col for col in df.columns if 'temperature_2m' in col]].max(axis=1)
-        df['max_weather_code'] = df[[col for col in df.columns if 'weather_code' in col]].max(axis=1)
+        # df['max_weather_code'] = df[[col for col in df.columns if 'weather_code' in col]].max(axis=1)
         df['max_relative_humidity'] = df[[col for col in df.columns if 'relative_humidity_2m' in col]].max(axis=1)
         df['max_wind_speed'] = df[[col for col in df.columns if 'wind_speed_10m' in col]].max(axis=1)
+        
+        # Select columns that contain 'weather_code'
+        weather_code_columns = [col for col in df.columns if 'weather_code' in col]
+
+        # Define a function to find the mode for each row
+        def row_mode(series):
+            return series.mode().iloc[0] if not series.mode().empty else None
+
+        # Apply the function to each row to find the most frequent weather code
+        df['max_weather_code'] = df[weather_code_columns].apply(row_mode, axis=1)
+        
 
         # Calculate daily mean
         daily_mean = df.resample('D').mean()
