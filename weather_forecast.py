@@ -94,7 +94,7 @@ def main():
             "longitude": lon,
             "hourly": ["temperature_2m", "weather_code", "relative_humidity_2m", "wind_speed_10m"],  # Add extra weather variables here
             "forecast_days": 7,
-            "models": "icon_seamless"
+            "models": ["icon_seamless", "icon_global", "icon_eu", "icon_d2", "gfs_seamless", "gfs025", "gfs05", "ecmwf_ifs04", "ecmwf_ifs025", "gem_global", "bom_access_global_ensemble"]
         }
         responses = openmeteo.weather_api(url, params=params)
         
