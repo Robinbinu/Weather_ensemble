@@ -196,7 +196,7 @@ def main():
 
         # Display DataFrame
         st.write("Overall Weather Data:")
-        st.dataframe(df.head())
+        st.dataframe(df.head(24))
         
         # Display Temperature Over Time
         st.subheader("Temperature Chart")
