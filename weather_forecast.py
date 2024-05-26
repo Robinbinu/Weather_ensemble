@@ -8,15 +8,16 @@ from urllib3.util.retry import Retry
 from retry_requests import retry
 import folium
 from streamlit_folium import st_folium
-from geopy.geocoders import Nominatim
+import geocoder
 from datetime import datetime, timedelta
 import weather_code_decoder as wcd
+import key as ky
 
 # Function to setup retry mechanism
 def setup_retry(session, retries, backoff_factor):
     retry_strategy = Retry(
         total=retries,
-        backoff_factor=backoff_factor,
+        backoff_factor=0.2,
         status_forcelist=[429, 500, 502, 503, 504],
         allowed_methods=["HEAD", "GET", "OPTIONS"]
     )
@@ -27,8 +28,7 @@ def setup_retry(session, retries, backoff_factor):
 
 # Function to get location name from coordinates
 def get_location_name(latitude, longitude):
-    geolocator = Nominatim(user_agent="weather_app")
-    location = geolocator.reverse((latitude, longitude), exactly_one=True)
+    location = geocoder.opencage([latitude, longitude], key=ky.opencage, method='reverse')
     if location:
         return location.address
     else:
@@ -36,10 +36,9 @@ def get_location_name(latitude, longitude):
     
 # Function to get coordinates from a location name
 def get_coordinates(location_name):
-    geolocator = Nominatim(user_agent="weather_app")
-    location = geolocator.geocode(location_name)
-    if location:
-        return location.latitude, location.longitude
+    location = geocoder.opencage(location_name, key=ky.opencage)
+    if location and location.latlng:
+        return location.latlng[0], location.latlng[1]
     else:
         return None, None
 
@@ -76,12 +75,12 @@ def main():
     st.write(f"Selected Coordinates: Latitude {lat}, Longitude {lon}")
     
     # Display Location Name
-    # if lat and lon:
-    #     location_name = get_location_name(lat, lon)
-    #     if location_name:
-    #         st.write(f"Current Location: {location_name}")
-    #     else:
-    #         st.write("Location Name Not Available")
+    if lat and lon:
+        location_name = get_location_name(lat, lon)
+        if location_name:
+            st.write(f"Selected Location: {location_name}")
+        else:
+            st.write("Location Name Not Available")
 
     # Fetch weather data
     if st.button("Get Weather Data"):
@@ -95,8 +94,7 @@ def main():
             "longitude": lon,
             "hourly": ["temperature_2m", "weather_code", "relative_humidity_2m", "wind_speed_10m"],  # Add extra weather variables here
             "forecast_days": 7,
-            # "models": ["icon_seamless", "icon_global", "icon_eu", "icon_d2", "gfs_seamless", "gfs025", "gfs05", "ecmwf_ifs04", "ecmwf_ifs025", "gem_global", "bom_access_global_ensemble"]
-            "models":"icon_seamless"
+            "models": "icon_seamless"
         }
         responses = openmeteo.weather_api(url, params=params)
         
@@ -156,19 +154,17 @@ def main():
         daily_max['weather_desc'] = daily_max['max_weather_code'].map(wcd.map_weather_codes)
 
         # Display DataFrame
-         # Display DataFrame
         st.write("Daily Data:")
-        st.dataframe(daily_max[['max_temp', 'max_weather_code', 'max_relative_humidity', 'max_wind_speed','weather_desc']])
+        st.dataframe(daily_max[['max_temp', 'max_weather_code', 'max_relative_humidity', 'max_wind_speed', 'weather_desc']])
         
         st.write("Daily Mean Data:")
         st.dataframe(daily_mean[['max_temp', 'max_weather_code', 'max_relative_humidity', 'max_wind_speed']])
-
 
         # Print Tomorrow's Temperature
         tomorrow_date = datetime.utcnow().date() + timedelta(days=1)
         if tomorrow_date in daily_mean.index:
             tomorrow_temp = daily_mean.loc[tomorrow_date, 'max_temp']
-            tomorrow_type= wcd.map_weather_codes(daily_max.loc[tomorrow_date, 'max_weather_code'].round())
+            tomorrow_type = wcd.map_weather_codes(daily_max.loc[tomorrow_date, 'max_weather_code'].round())
             st.write(f"Tomorrow's Temperature: {tomorrow_temp.round()}°C")
             st.write(f"Tomorrow's probable weather: {tomorrow_type}")
             
@@ -179,8 +175,6 @@ def main():
         st.write("Overall Weather Data:")
         st.dataframe(df.head())
         
-        # st.write(df.max_weather_code.value_counts())
-
         # Display Temperature Over Time
         st.subheader("Temperature Chart")
         st.line_chart(df['max_temp'])
@@ -189,7 +183,7 @@ def main():
         st.subheader("Weather Code Chart")
         st.line_chart(df['max_weather_code'])
         
-         # Display Code Over Time
+        # Display Code Over Time
         st.subheader("Weather Type Chart")
         st.scatter_chart(df['weather_desc'])
 
@@ -201,7 +195,5 @@ def main():
         st.subheader("Wind Speed Chart")
         st.line_chart(df['max_wind_speed'])
 
-
 if __name__ == '__main__':
     main()
-

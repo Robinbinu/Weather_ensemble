@@ -6,3 +6,6 @@ retry-requests
 folium
 streamlit-folium
 geopy
+geocoder
+
+
