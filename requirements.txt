@@ -6,4 +6,3 @@ retry-requests
 folium
 streamlit-folium
 geopy
-weather-code-decoder
