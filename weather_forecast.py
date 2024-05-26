@@ -28,11 +28,11 @@ def setup_retry(session, retries, backoff_factor):
 
 # Function to get location name from coordinates
 def get_location_name(latitude, longitude):
-    location = geocoder.opencage([latitude, longitude], key=ky.opencage, method='reverse')
-    if location:
-        return location.address
+    location_en = geocoder.opencage([latitude, longitude], key=ky.opencage, method='reverse', language='en')
+    if location_en:
+        return location_en.address
     else:
-        return None
+        return None, None
     
 # Function to get coordinates from a location name
 def get_coordinates(location_name):
@@ -62,7 +62,18 @@ def main():
 
     # Folium map for selecting location
     m = folium.Map(location=[lat, lon], zoom_start=5)
-    marker = folium.Marker(location=[lat, lon], draggable=True)
+
+    location_name_en = get_location_name(lat, lon)
+    if location_name_en:
+        popup_text = f"Selected Location: <span style='font-size:larger;'>{location_name_en}</span> (English)"
+    else:
+        popup_text = "Location Name Not Available"
+
+    marker = folium.Marker(
+        location=[lat, lon], 
+        draggable=True,
+        popup=popup_text
+    )
     m.add_child(marker)
 
     # Render Folium map in Streamlit
@@ -73,12 +84,12 @@ def main():
         lon = map_data['last_clicked']['lng']
 
     st.write(f"Selected Coordinates: Latitude {lat}, Longitude {lon}")
-    
+
     # Display Location Name
     if lat and lon:
-        location_name = get_location_name(lat, lon)
-        if location_name:
-            st.write(f"Selected Location: {location_name}")
+        location_name_en = get_location_name(lat, lon)
+        if location_name_en:
+            st.write(f"Selected Location : {location_name_en}")
         else:
             st.write("Location Name Not Available")
 
@@ -178,7 +189,6 @@ def main():
             tomorrow_type = wcd.map_weather_codes(daily_max.loc[tomorrow_date, 'max_weather_code'].round())
             st.write(f"Tomorrow's Temperature: {tomorrow_temp.round()}°C")
             st.write(f"Tomorrow's probable weather: {tomorrow_type}")
-            
         else:
             st.write("Tomorrow's Temperature Not Available")
 
@@ -208,3 +218,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
