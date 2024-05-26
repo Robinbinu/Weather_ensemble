@@ -143,6 +143,8 @@ def main():
 
         # Create columns for max_temp, max_weather_code, max_relative_humidity, max_wind_speed
         df['max_temp'] = df[[col for col in df.columns if 'temperature_2m' in col]].max(axis=1)
+        df['min_temp'] = df[[col for col in df.columns if 'temperature_2m' in col]].min(axis=1)
+        df['mean_temp'] = df[['max_temp', 'min_temp']].mean(axis=1)
         # df['max_weather_code'] = df[[col for col in df.columns if 'weather_code' in col]].max(axis=1)
         df['max_relative_humidity'] = df[[col for col in df.columns if 'relative_humidity_2m' in col]].max(axis=1)
         df['max_wind_speed'] = df[[col for col in df.columns if 'wind_speed_10m' in col]].max(axis=1)
@@ -198,7 +200,7 @@ def main():
         
         # Display Temperature Over Time
         st.subheader("Temperature Chart")
-        st.line_chart(df['max_temp'])
+        st.line_chart(df['mean_temp'])
 
         # Display Code Over Time
         st.subheader("Weather Code Chart")
