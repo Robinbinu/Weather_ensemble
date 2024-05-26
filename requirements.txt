@@ -1,8 +1,9 @@
-# streamlit==0.86.0
-requests-cache==0.7.4
-pandas==1.3.3
-openmeteo-requests==0.3.0
-retry-requests==1.0.0
-folium==0.12.1
-streamlit-folium==0.4.0
-geopy==2.2.0
+# streamlit
+requests-cache
+pandas
+openmeteo-requests
+retry-requests
+folium
+streamlit-folium
+geopy
+weather-code-decoder
