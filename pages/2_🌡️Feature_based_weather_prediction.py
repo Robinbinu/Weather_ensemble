@@ -63,7 +63,7 @@ def predict_all_models(data):
 
 st.title('Weather Prediction')
 
-# Sidebar inputs for features with synchronized number_input and slider
+# Sidebar inputs for features with synchronized sliders
 st.sidebar.header('Input Features')
 
 inputs = []
@@ -72,29 +72,17 @@ for name in feature_names:
     if f'{name}_value' not in st.session_state:
         st.session_state[f'{name}_value'] = 30.0
 
-    # Sidebar number input with custom step value
-    number_input_value = st.sidebar.number_input(
-        f'{name.capitalize()} (Number Input):',
-        min_value=0.0,
-        max_value=100.0,
-        value=st.session_state[f'{name}_value'],
-        step=1.0,
-        key=f'{name}_number_input'
-    )
-
     # Sidebar slider with synchronized value
     slider_value = st.sidebar.slider(
         f'{name.capitalize()} (Slider):',
         min_value=0.0,
         max_value=100.0,
         value=st.session_state[f'{name}_value'],
-        step=0.1,
+        step=0.01,
         key=f'{name}_slider'
     )
 
-    # Update the session state to synchronize both inputs
-    if number_input_value != st.session_state[f'{name}_value']:
-        st.session_state[f'{name}_value'] = number_input_value
+    # Update the session state to synchronize the slider value
     if slider_value != st.session_state[f'{name}_value']:
         st.session_state[f'{name}_value'] = slider_value
 
