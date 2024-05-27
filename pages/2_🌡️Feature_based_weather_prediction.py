@@ -8,6 +8,7 @@ from tensorflow.keras.models import load_model
 st.set_page_config(page_title="Feature based weather prediction", page_icon="🌡️")
 st.markdown("# Feature based weather prediction")
 st.sidebar.header("Feature based weather prediction")
+
 # Load the LSTM model and scalers
 loaded_lstm_model = load_model('models/lstm_weather_model.h5')
 
@@ -41,7 +42,7 @@ def postprocess_data(data, scaler_target):
 # Function to make predictions for all models
 def predict_all_models(data):
     predictions = {}
-    
+
     # LSTM
     scaled_input_lstm = preprocess_data(data, lstm_scaler_features)
     prediction_lstm = loaded_lstm_model.predict(scaled_input_lstm.reshape(1, scaled_input_lstm.shape[0], scaled_input_lstm.shape[1]))
@@ -62,13 +63,42 @@ def predict_all_models(data):
 
 st.title('Weather Prediction')
 
-# Sidebar inputs for features
+# Sidebar inputs for features with synchronized number_input and slider
 st.sidebar.header('Input Features')
 
 inputs = []
 for name in feature_names:
-    value = st.sidebar.number_input(f'{name.capitalize()}:', min_value=0.0, max_value=100.0, value=50.0)
-    inputs.append(value)
+    # Initialize session state for the synchronized value
+    if f'{name}_value' not in st.session_state:
+        st.session_state[f'{name}_value'] = 30.0
+
+    # Sidebar number input with custom step value
+    number_input_value = st.sidebar.number_input(
+        f'{name.capitalize()} (Number Input):',
+        min_value=0.0,
+        max_value=100.0,
+        value=st.session_state[f'{name}_value'],
+        step=1.0,
+        key=f'{name}_number_input'
+    )
+
+    # Sidebar slider with synchronized value
+    slider_value = st.sidebar.slider(
+        f'{name.capitalize()} (Slider):',
+        min_value=0.0,
+        max_value=100.0,
+        value=st.session_state[f'{name}_value'],
+        step=1.0,
+        key=f'{name}_slider'
+    )
+
+    # Update the session state to synchronize both inputs
+    if number_input_value != st.session_state[f'{name}_value']:
+        st.session_state[f'{name}_value'] = number_input_value
+    if slider_value != st.session_state[f'{name}_value']:
+        st.session_state[f'{name}_value'] = slider_value
+
+    inputs.append(st.session_state[f'{name}_value'])
 
 input_df = pd.DataFrame([inputs], columns=feature_names)
 
