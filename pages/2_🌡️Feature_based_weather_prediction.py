@@ -74,7 +74,7 @@ for name in feature_names:
 
     # Sidebar slider with synchronized value
     slider_value = st.sidebar.slider(
-        f'{name.capitalize()} (Slider):',
+        f'{name.capitalize()}:',
         min_value=0.0,
         max_value=100.0,
         value=st.session_state[f'{name}_value'],
