@@ -10,3 +10,4 @@ geocoder
 tensorflow
 sklearn.preprocessing
 xgboost
+numpy
