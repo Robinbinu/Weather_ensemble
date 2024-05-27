@@ -5,7 +5,7 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler
 import pickle
 from tensorflow.keras.models import load_model
 
-st.set_page_config(page_title="Feature based weather prediction", page_icon="📈")
+st.set_page_config(page_title="Feature based weather prediction", page_icon="🌡️")
 st.markdown("# Feature based weather prediction")
 st.sidebar.header("Feature based weather prediction")
 # Load the LSTM model and scalers

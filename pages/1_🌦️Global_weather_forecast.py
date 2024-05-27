@@ -44,7 +44,7 @@ def get_coordinates(location_name):
 
 # Streamlit App
 def main():
-    st.set_page_config(page_title="Global Weather Forecast", page_icon="📈")
+    st.set_page_config(page_title="Global Weather Forecast", page_icon="🌦️")
     st.markdown("# Global Weather Forecast")
     st.sidebar.header("Global Weather Forecast")
 
