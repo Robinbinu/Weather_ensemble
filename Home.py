@@ -25,7 +25,7 @@ st.markdown(
 
     ### 📚 Want to Learn More?
     - Check out our comprehensive [documentation](https://docs.weatherwave.com).
-    - Join our [community forums](https://discuss.weatherwave.com) to ask questions and share feedback.
+    - Join our [community forums](https://github.com/Robinbinu/Weather_ensemble) to ask questions and share feedback.
 
     WeatherWave is more than just weather – it's your gateway to understanding the world through data. Join us on this exciting journey and ride the wave of innovation!
     """
