@@ -24,7 +24,7 @@ st.markdown(
     - **Personalized Insights:** Get tailored weather updates and alerts based on your location and preferences.
 
     ### 📚 Want to Learn More?
-    - Check out our comprehensive [documentation](https://docs.weatherwave.com).
+    - Check out our comprehensive [documentation](https://github.com/Robinbinu/Weather_ensemble/blob/main/documentation/Tomorrow's%20Weather%20Predictive%20Analytics.pdf).
     - Join our [community forums](https://github.com/Robinbinu/Weather_ensemble) to ask questions and share feedback.
 
     WeatherWave is more than just weather – it's your gateway to understanding the world through data. Join us on this exciting journey and ride the wave of innovation!
