@@ -9,3 +9,4 @@ geopy
 geocoder
 tensorflow
 sklearn
+xgboost
