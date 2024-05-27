@@ -8,6 +8,6 @@ streamlit-folium
 geopy
 geocoder
 tensorflow
-sklearn.preprocessing
+scikit-learn
 xgboost
 numpy
