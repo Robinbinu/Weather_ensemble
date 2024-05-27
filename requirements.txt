@@ -7,5 +7,5 @@ folium
 streamlit-folium
 geopy
 geocoder
-
-
+tensorflow
+sklearn
